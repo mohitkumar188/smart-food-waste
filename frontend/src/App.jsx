@@ -6,6 +6,7 @@ import QualityGuardTab from './components/QualityGuardTab.jsx';
 import IoTMonitorTab from './components/IoTMonitorTab.jsx';
 import RedistributionTab from './components/RedistributionTab.jsx';
 import ESGReportTab from './components/ESGReportTab.jsx';
+import { getApiUrl } from './config/api.js';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -20,7 +21,7 @@ export default function App() {
   const fetchStats = async () => {
     setIsRefreshing(true);
     try {
-      const res = await fetch('/api/dashboard/stats');
+      const res = await fetch(getApiUrl('/api/dashboard/stats'));
       if (res.ok) {
         const data = await res.json();
         setStats(data);

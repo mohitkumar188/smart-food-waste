@@ -24,6 +24,7 @@ import {
   X,
   Printer
 } from 'lucide-react';
+import { getApiUrl } from '../config/api.js';
 
 // Custom Map Recenter Helper Component
 function ChangeView({ center, zoom }) {
@@ -101,7 +102,7 @@ export default function RedistributionTab({ initialFormData }) {
 
   const fetchEntities = async () => {
     try {
-      const res = await fetch('/api/redistribution/entities');
+      const res = await fetch(getApiUrl('/api/redistribution/entities'));
       const data = await res.json();
       setEntities(data.entities || []);
       if (data.entities && data.entities.length > 0) {
@@ -114,7 +115,7 @@ export default function RedistributionTab({ initialFormData }) {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch('/api/redistribution/history');
+      const res = await fetch(getApiUrl('/api/redistribution/history'));
       const data = await res.json();
       setHistory(data.batches || []);
     } catch (err) {
@@ -127,7 +128,7 @@ export default function RedistributionTab({ initialFormData }) {
     setMatching(true);
 
     try {
-      const res = await fetch('/api/redistribution/match', {
+      const res = await fetch(getApiUrl('/api/redistribution/match'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -160,7 +161,7 @@ export default function RedistributionTab({ initialFormData }) {
     setDispatching(true);
 
     try {
-      const res = await fetch('/api/redistribution/dispatch', {
+      const res = await fetch(getApiUrl('/api/redistribution/dispatch'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

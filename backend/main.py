@@ -13,13 +13,39 @@ from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel
 
 from database import init_db, get_db_connection
+from seed_data import seed_all
 from ml.forecaster import forecaster
 from ml.quality_analyzer import quality_analyzer
 from ml.iot_simulator import iot_simulator
 from ml.route_optimizer import redistribution_matcher, route_optimizer, haversine_distance
 
-# Initialize database
-init_db()
+def ensure_system_initialized():
+    """
+    Ensures SQLite database, initial seed records, and ML models exist.
+    Essential for ephemeral cloud runtimes (e.g. Render free tier restarts).
+    """
+    try:
+        init_db()
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM entities")
+        count = cursor.fetchone()[0]
+        conn.close()
+
+        if count == 0:
+            print("[AnnaSetu Startup] Database is empty. Seeding initial records and verifying ML model...")
+            seed_all()
+        else:
+            forecaster._ensure_trained()
+    except Exception as e:
+        print(f"[AnnaSetu Startup] Warning during initialization check: {e}")
+        try:
+            seed_all()
+        except Exception as seed_err:
+            print(f"[AnnaSetu Startup] Fallback seed error: {seed_err}")
+
+# Auto-initialize on module load & startup
+ensure_system_initialized()
 
 app = FastAPI(
     title="AnnaSetu AI - Smart Food Waste & Redistribution API",
@@ -27,11 +53,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for frontend Vite dev server
+@app.on_event("startup")
+def startup_event():
+    ensure_system_initialized()
+
+# Enable CORS for cross-origin requests (e.g. Vercel frontend -> Render backend)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

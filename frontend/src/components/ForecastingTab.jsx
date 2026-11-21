@@ -24,6 +24,7 @@ import {
   ResponsiveContainer, 
   Cell 
 } from 'recharts';
+import { getApiUrl } from '../config/api.js';
 
 const PRESETS = [
   {
@@ -109,7 +110,7 @@ export default function ForecastingTab({ onBridgeToRedistribution }) {
     if (e) e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch('/api/forecast/predict', {
+      const res = await fetch(getApiUrl('/api/forecast/predict'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

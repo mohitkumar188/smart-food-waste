@@ -171,6 +171,26 @@ Frontend will be live at `http://localhost:5173`.
 
 ---
 
+## ☁️ Production Cloud Deployment (Render & Vercel)
+
+### 1. Deploy Backend on Render (Web Service)
+- **Repository:** Connect this GitHub repository.
+- **Environment:** `Python 3`
+- **Build Command:** `pip install -r backend/requirements.txt`
+- **Start Command:** `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+- **Auto-Initialization:** The SQLite database, pre-seeded Delhi-NCR entities, and RandomForest ML models initialize and verify automatically on backend boot, making it fully resilient to Render free-tier disk recycles.
+
+### 2. Deploy Frontend on Vercel
+- **Repository:** Connect this GitHub repository.
+- **Framework Preset:** `Vite`
+- **Root Directory:** `frontend`
+- **Build Command:** `npm run build`
+- **Output Directory:** `dist`
+- **Environment Variables:**
+  - `VITE_API_URL`: Your deployed Render backend service URL (e.g., `https://annasetu-backend.onrender.com` without a trailing slash).
+
+---
+
 ## 🎯 Platform Demonstration Walkthrough
 
 1. **Executive Dashboard (`http://localhost:5173`):**

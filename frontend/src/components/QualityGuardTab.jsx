@@ -14,6 +14,7 @@ import {
   AlertOctagon,
   ArrowRight
 } from 'lucide-react';
+import { getApiUrl } from '../config/api.js';
 
 const SAMPLE_PRESETS = [
   {
@@ -72,7 +73,7 @@ export default function QualityGuardTab({ onBridgeToRedistribution }) {
   const fetchFefo = async () => {
     setLoadingFefo(true);
     try {
-      const res = await fetch('/api/inventory/fefo');
+      const res = await fetch(getApiUrl('/api/inventory/fefo'));
       const data = await res.json();
       setFefoItems(data.items || []);
     } catch (err) {
@@ -115,7 +116,7 @@ export default function QualityGuardTab({ onBridgeToRedistribution }) {
       formData.append("hours_since_prep", String(hoursSincePrep));
       formData.append("storage_temp_c", String(storageTemp));
 
-      const res = await fetch('/api/quality/inspect', {
+      const res = await fetch(getApiUrl('/api/quality/inspect'), {
         method: 'POST',
         body: formData
       });

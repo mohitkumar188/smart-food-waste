@@ -13,6 +13,7 @@ import {
   TrendingDown,
   Sparkles
 } from 'lucide-react';
+import { getApiUrl } from '../config/api.js';
 
 export default function ESGReportTab() {
   const [report, setReport] = useState(null);
@@ -26,7 +27,7 @@ export default function ESGReportTab() {
   const fetchReport = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/esg/report');
+      const res = await fetch(getApiUrl('/api/esg/report'));
       const data = await res.json();
       setReport(data);
     } catch (err) {
@@ -40,7 +41,7 @@ export default function ESGReportTab() {
     setDownloading(true);
     // Trigger direct browser download from backend endpoint
     const link = document.createElement('a');
-    link.href = '/api/esg/export-csv';
+    link.href = getApiUrl('/api/esg/export-csv');
     link.setAttribute('download', `AnnaSetu_AI_Food_Waste_ESG_Report_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();

@@ -25,6 +25,7 @@ import {
   ReferenceLine,
   Legend
 } from 'recharts';
+import { getApiUrl } from '../config/api.js';
 
 export default function IoTMonitorTab() {
   const [telemetryData, setTelemetryData] = useState(null);
@@ -40,7 +41,7 @@ export default function IoTMonitorTab() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch('/api/iot/telemetry');
+      const res = await fetch(getApiUrl('/api/iot/telemetry'));
       const data = await res.json();
       setTelemetryData(data);
     } catch (err) {
@@ -51,7 +52,7 @@ export default function IoTMonitorTab() {
   const triggerSimulation = async (mode) => {
     setTriggeringMode(mode);
     try {
-      await fetch('/api/iot/simulate', {
+      await fetch(getApiUrl('/api/iot/simulate'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode })
